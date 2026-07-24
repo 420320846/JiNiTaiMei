@@ -31,7 +31,7 @@ jobs:
           echo "sdk.dir=$SDK" > android/local.properties
           echo "sdk.dir=$SDK" > local.properties
           if [ ! -d "$SDK/platforms/android-34" ]; then
-            echo "=== Installing platform 34 ==="
+            echo "Installing android-34..."
             yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
             yes | $SDK/tools/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
             (wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/clt.zip && \
@@ -40,31 +40,31 @@ jobs:
              mv /tmp/clt/cmdline-tools/* $SDK/cmdline-tools/latest/ && \
              yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1)
           fi
-          echo "sdk.dir=$SDK" > android/local.properties
+          ls $SDK/platforms/android-34/ 2>&1
 
-      - name: Build and capture output
+      - name: Build + log
         id: build
         continue-on-error: true
         run: |
           cd android
           gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log
-          echo "exitcode=$?" >> $GITHUB_OUTPUT
+          exitcode=${PIPESTATUS[0]}
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+          exit $exitcode
 
-      - name: Show build log
+      - name: Show build log (last 300 lines)
         run: |
-          cat /tmp/build.log 2>/dev/null || echo "No build log found"
-          echo "---"
-          wc -l /tmp/build.log 2>/dev/null
-          echo "---"
-          tail -200 /tmp/build.log 2>/dev/null || echo "no log"
+          echo "=== GRADLE OUTPUT (last 300 lines) ==="
+          tail -300 /tmp/build.log 2>/dev/null || echo "NO LOG"
+          echo "=== END LOG ==="
 
       - name: Gradle tasks debug
-        if: steps.build.outputs.exitcode != '0'
         run: |
           cd android
-          gradle tasks --no-daemon 2>&1 | head -50 || echo "gradle tasks failed too"
+          gradle tasks --no-daemon 2>&1 | head -80 || echo "gradle tasks failed"
 
       - name: Upload APK
+        if: steps.build.outputs.exitcode == '0'
         uses: actions/upload-artifact@v4
         with:
           name: tomato-app
