@@ -30,51 +30,39 @@ jobs:
           echo "ANDROID_SDK_ROOT=$SDK" >> $GITHUB_ENV
           echo "sdk.dir=$SDK" > android/local.properties
           echo "sdk.dir=$SDK" > local.properties
-          echo "SDK at: $SDK"
-          ls $SDK/ 2>/dev/null && echo "SDK dir exists" || echo "NO SDK DIR"
-          ls $SDK/platforms/ 2>/dev/null && echo "platforms installed" || echo "NO platforms"
-          ls $SDK/build-tools/ 2>/dev/null && echo "build-tools installed" || echo "NO build-tools"
           if [ ! -d "$SDK/platforms/android-34" ]; then
             echo "=== Installing platform 34 ==="
-            if [ -f "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
-              yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" 2>&1
-            elif [ -f "$SDK/tools/bin/sdkmanager" ]; then
-              yes | "$SDK/tools/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" 2>&1
-            else
-              echo "Downloading cmdline tools..."
-              wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/clt.zip
-              unzip -q /tmp/clt.zip -d /tmp/clt
-              mkdir -p $SDK/cmdline-tools/latest
-              mv /tmp/clt/cmdline-tools/* $SDK/cmdline-tools/latest/
-              yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1
-            fi
-            echo "=== After install ==="
-            ls $SDK/platforms/ 2>&1
-            ls $SDK/build-tools/ 2>&1
-          else
-            echo "Platform 34 already installed"
+            yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
+            yes | $SDK/tools/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
+            (wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/clt.zip && \
+             unzip -q /tmp/clt.zip -d /tmp/clt && \
+             mkdir -p $SDK/cmdline-tools/latest && \
+             mv /tmp/clt/cmdline-tools/* $SDK/cmdline-tools/latest/ && \
+             yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1)
           fi
           echo "sdk.dir=$SDK" > android/local.properties
-          echo "sdk.dir=$SDK" > local.properties
 
-      - name: Debug environment
-        run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
-          echo "JAVA_HOME=$JAVA_HOME"
-          which gradle
-          gradle --version
-          echo "=== local.properties ==="
-          cat android/local.properties 2>/dev/null || echo "NO android/local.properties"
-          cat local.properties 2>/dev/null || echo "NO local.properties"
-          echo "=== SDK check ==="
-          ls /usr/local/lib/android/sdk/platforms/android-34/ 2>&1
-          ls /usr/local/lib/android/sdk/build-tools/34.0.0/ 2>&1
-
-      - name: Build Debug APK
+      - name: Build and capture output
+        id: build
+        continue-on-error: true
         run: |
           cd android
-          gradle assembleDebug --no-daemon --stacktrace 2>&1
+          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log
+          echo "exitcode=$?" >> $GITHUB_OUTPUT
+
+      - name: Show build log
+        run: |
+          cat /tmp/build.log 2>/dev/null || echo "No build log found"
+          echo "---"
+          wc -l /tmp/build.log 2>/dev/null
+          echo "---"
+          tail -200 /tmp/build.log 2>/dev/null || echo "no log"
+
+      - name: Gradle tasks debug
+        if: steps.build.outputs.exitcode != '0'
+        run: |
+          cd android
+          gradle tasks --no-daemon 2>&1 | head -50 || echo "gradle tasks failed too"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -84,7 +72,7 @@ jobs:
           retention-days: 30
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.build.outputs.exitcode == '0'
         run: |
           gh release create "${{ github.ref_name }}" \
             --title "Tomato Timer ${{ github.ref_name }}" \
