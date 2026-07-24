@@ -315,7 +315,7 @@ function taskBody(){
     return true
   });
   tasks=tasks.filter(function(tk){var td=today();return tk.completed||!(tk.recurrence&&tk.date>td)});
-  if(state.subNav!=="done"){tasks=tasks.filter(function(t){return!(t.completed&&t.recurrence)})}
+  if(state.subNav!=="done"){tasks=tasks.filter(function(t){return!t.completed})}
   if(state.subNav==="all"){var seen={};tasks=tasks.filter(function(tk){if(tk.recurrence){var k=tk.title+"|"+(tk.setId||"");if(seen[k])return false;seen[k]=true}return true})}
   tasks.sort(function(a,b){
     if(a.completed!==b.completed)return a.completed?1:-1;
@@ -559,3 +559,4 @@ window.addEventListener('beforeunload',()=>{if(state.activeTimer)clearInterval(s
 </script>
 </body>
 </html>
+
