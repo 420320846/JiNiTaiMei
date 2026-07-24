@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>番茄钟 · 任务管理</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e74c3c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -557,6 +559,9 @@ var _settings=ls();document.documentElement.style.setProperty('--accent',_settin
 re();
 window.addEventListener('beforeunload',()=>{if(state.activeTimer)clearInterval(state.activeTimer.iterval)});
 </script>
+
+<script>if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }</script>
 </body>
 </html>
+
 
