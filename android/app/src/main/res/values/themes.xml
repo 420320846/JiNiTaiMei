@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.TomatoTimer" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#e74c3c</item>
+        <item name="colorPrimaryDark">#c0392b</item>
+        <item name="colorAccent">#e74c3c</item>
+        <item name="android:statusBarColor">#e74c3c</item>
+    </style>
+</resources>

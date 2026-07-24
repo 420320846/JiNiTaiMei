@@ -1,2 +1,13 @@
-﻿.git_repo/
-backup/
+﻿node_modules/
+www/
+pnpm-lock.yaml
+package.json
+android/app/src/main/assets/public/
+android/app/build/
+android/.gradle/
+android/captures/
+android/local.properties
+*.iml
+.idea/
+.DS_Store
+Thumbs.db
