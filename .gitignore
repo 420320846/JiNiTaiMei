@@ -1,8 +1,7 @@
-﻿node_modules/
+node_modules/
 www/
 pnpm-lock.yaml
 package.json
-android/app/src/main/assets/public/
 android/app/build/
 android/.gradle/
 android/captures/
