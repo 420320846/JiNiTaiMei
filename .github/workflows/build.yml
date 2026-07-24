@@ -29,9 +29,7 @@ jobs:
           echo "ANDROID_HOME=$SDK" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$SDK" >> $GITHUB_ENV
           echo "sdk.dir=$SDK" > android/local.properties
-          echo "sdk.dir=$SDK" > local.properties
           if [ ! -d "$SDK/platforms/android-34" ]; then
-            echo "Installing android-34..."
             yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
             yes | $SDK/tools/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
             (wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/clt.zip && \
@@ -40,31 +38,37 @@ jobs:
              mv /tmp/clt/cmdline-tools/* $SDK/cmdline-tools/latest/ && \
              yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1)
           fi
-          ls $SDK/platforms/android-34/ 2>&1
 
-      - name: Build + log
-        id: build
+      - name: Build APK
         continue-on-error: true
         run: |
           cd android
           gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log
-          exitcode=${PIPESTATUS[0]}
-          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
-          exit $exitcode
+          exit ${PIPESTATUS[0]}
 
       - name: Show build log (last 300 lines)
+        if: always()
         run: |
-          echo "=== GRADLE OUTPUT (last 300 lines) ==="
-          tail -300 /tmp/build.log 2>/dev/null || echo "NO LOG"
-          echo "=== END LOG ==="
+          echo "=== BUILD LOG (last 300) ==="
+          tail -300 /tmp/build.log 2>/dev/null || echo "No log"
+          echo "=== END ==="
+          echo "---"
+          ls -la android/app/build/outputs/apk/debug/ 2>/dev/null || echo "No APK output dir"
+          echo "---"
+          ls -la android/app/build/outputs/ 2>/dev/null
 
-      - name: Gradle tasks debug
+      - name: Check APK
+        id: check
+        if: always()
         run: |
-          cd android
-          gradle tasks --no-daemon 2>&1 | head -80 || echo "gradle tasks failed"
+          if ls android/app/build/outputs/apk/debug/*.apk 2>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Upload APK
-        if: steps.build.outputs.exitcode == '0'
+        if: steps.check.outputs.exists == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: tomato-app
@@ -72,7 +76,7 @@ jobs:
           retention-days: 30
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/') && steps.build.outputs.exitcode == '0'
+        if: startsWith(github.ref, 'refs/tags/') && steps.check.outputs.exists == 'true'
         run: |
           gh release create "${{ github.ref_name }}" \
             --title "Tomato Timer ${{ github.ref_name }}" \
