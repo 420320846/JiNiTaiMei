@@ -6,13 +6,13 @@ on:
     tags: [ 'v*' ]
   workflow_dispatch:
 
-env:
-  ANDROID_HOME: /usr/local/lib/android/sdk
-  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,32 +25,30 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.11.1
+          gradle-version: 8.7
 
-      - name: Install Android SDK components
+      - name: Install Android SDK 34
         run: |
-          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-          if [ ! -d "$ANDROID_HOME/platforms/android-34" ]; then
-            echo "Installing Android SDK platform 34..."
-            cmdline_tools="$ANDROID_HOME/cmdline-tools/latest/bin"
-            if [ -f "$cmdline_tools/sdkmanager" ]; then
-              yes | "$cmdline_tools/sdkmanager" "platforms;android-34" "build-tools;34.0.0" 2>&1
-            elif [ -f "$ANDROID_HOME/tools/bin/sdkmanager" ]; then
-              yes | "$ANDROID_HOME/tools/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" 2>&1
-            else
-              echo "Downloading cmdline tools..."
-              wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/clt.zip
-              unzip -q /tmp/clt.zip -d "$ANDROID_HOME/cmdline-tools"
-              mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-              yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" 2>&1
-            fi
-          else
-            echo "Android SDK platform 34 already installed"
+          SDK=/usr/local/lib/android/sdk
+          echo "sdk.dir=$SDK" > local.properties
+          export ANDROID_HOME=$SDK
+          echo "ANDROID_HOME=$SDK" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$SDK" >> $GITHUB_ENV
+          ls $SDK/platforms/ 2>/dev/null
+          if [ ! -d "$SDK/platforms/android-34" ]; then
+            echo "Installing platform 34..."
+            yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
+            yes | $SDK/tools/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1
           fi
+          ls $SDK/platforms/android-34/ && echo "platform 34 OK"
+          ls $SDK/build-tools/34.0.0/ && echo "build-tools 34.0.0 OK"
 
       - name: Build Debug APK
         run: |
-          cd android && gradle assembleDebug --no-daemon 2>&1
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "JAVA_HOME=$JAVA_HOME"
+          gradle --version
+          gradle assembleDebug --no-daemon --stacktrace 2>&1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
