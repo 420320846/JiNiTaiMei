@@ -27,7 +27,6 @@ jobs:
         run: |
           SDK=/usr/local/lib/android/sdk
           echo "ANDROID_HOME=$SDK" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$SDK" >> $GITHUB_ENV
           echo "sdk.dir=$SDK" > android/local.properties
           if [ ! -d "$SDK/platforms/android-34" ]; then
             yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || \
@@ -43,42 +42,28 @@ jobs:
         continue-on-error: true
         run: |
           cd android
-          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log
-          exit ${PIPESTATUS[0]}
-
-      - name: Debug build output
-        if: always()
-        run: |
-          echo "=== Build log (last 100) ==="
-          tail -100 /tmp/build.log 2>/dev/null || echo "No log"
-          echo "=== Search for APKs ==="
-          find . -name "*.apk" 2>/dev/null | head -10 || echo "No APKs found"
-          echo "=== Gradle output dir ==="
-          find android -name "outputs" -type d 2>/dev/null | head -5 || echo "No outputs dir"
-          echo "=== CWD ==="
-          pwd
-          echo "=== tree android ==="
-          find android -maxdepth 5 -type d 2>/dev/null | head -30 || echo "error"
+          gradle assembleDebug --no-daemon 2>&1
 
       - name: Upload APK
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tomato-app
-          path: |
-            **/*.apk
+          name: tomato-app-apk
+          path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: warn
-          retention-days: 30
+          retention-days: 90
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          APK=$(find . -name "*.apk" -type f 2>/dev/null | head -1)
-          if [ -n "$APK" ]; then
+          APK_PATH=$(find . -name "*.apk" -type f 2>/dev/null | head -1)
+          if [ -n "$APK_PATH" ]; then
             gh release create "${{ github.ref_name }}" \
-              --title "Tomato Timer ${{ github.ref_name }}" \
-              --notes "Download the APK and install it on your Android device." \
-              "$APK"
+              --title "番茄钟 ${{ github.ref_name }}" \
+              --notes "APK 下载后可在 Android 设备上安装使用。" \
+              "$APK_PATH"
+          else
+            echo "No APK found"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
