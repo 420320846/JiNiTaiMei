@@ -1,14 +1,11 @@
-以下是 README 的完整文字，你可以直接复制：
-
----
-
+[README.md](https://github.com/user-attachments/files/30442915/README.md)
 # 计你太美 ✨
 
 > 让每一件小事都闪闪发光 —— 一个可爱风的全栈任务管理小应用
 
 计你太美是一个基于 Next.js 16 的任务管理与专注计时应用，采用樱花粉主题的可爱风设计。把目标拆成任务集，专注计时，统计进度，让生活更有条理。支持 **Web / PWA / Android APK** 三端运行，完全离线可用。
 
-![version](https://img.shields.io/badge/version-v1.3.2-FFB7C5)
+![version](https://img.shields.io/badge/version-v1.3.3-FFB7C5)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 ![next](https://img.shields.io/badge/Next.js-16-black)
 ![react](https://img.shields.io/badge/React-19-61dafb)
@@ -19,11 +16,11 @@
 ## ✨ 功能特性
 
 ### 🏠 首页
-- 每日格言卡片（励志诗词轮播）
+- 每日格言卡片（99 条励志诗词轮播 + 随机切换按钮）
 - 今日总览（完成率 / 优先任务 / 任务集合）
 - 全部任务集快捷入口
 - 高优先级任务弹窗、全部任务集弹窗
-- 新建任务集、示例数据一键导入
+- 新建任务集
 
 ### 📋 任务管理
 - **任务集**：把目标分类管理（每日习惯 / 工作项目 / 学习计划 等）
@@ -34,60 +31,50 @@
 - **回收站**：软删除，可恢复或彻底清除
 - **循环任务**：每日自动重置完成状态
 - **复制任务**：一键克隆（含子任务）
+- **截止日期提醒**：到期/逾期/明日提醒通知
 
 ### ⏱️ 专注计时
 - 番茄钟 / 正向计时双模式
-- 专注 / 休息 状态切换
+- 专注 / 休息 状态切换（分两行居中排列）
 - 关联任务集 & 子任务
-- 毛玻璃计时圈 + 高级动画
+- 毛玻璃计时圈 + 旋转光泽 + 呼吸发光动画
 - 计时进行时锁定切换，防误触
-- 全屏专注界面，励志诗词陪伴
+- 全屏专注界面，底部栏保留
+- 大尺寸控制按钮（64px 开始按钮，48px 其他）
 
 ### 📊 数据统计
 11 个可拖拽排序、可隐藏的统计卡片：
 - **快捷统计**：任务集 / 已完成 / 待办中 / 高优先级（可点击弹窗）
-- **完成趋势**：日/周/月/年柱状图（点击显示专注时长）
+- **完成趋势**：日视图（4小时区间）/ 周视图（周一到周日）/ 月视图（日历网格热力图）/ 年视图（12月）
 - **平均统计**：日/周/月/年平均完成数 & 专注时长
 - **优先级分布**：高/中/低/无 待办占比
-- **专注热力图**：30/90 天活动密度（点击显示详情）
-- **任务集环形图**：专注时长占比（毛玻璃空状态）
-- **子任务环形图**：单任务下子任务专注时长
-- **7天专注柱状图**：点击查看详情
-- **专注时段分布**：24小时柱状图（tooltip "x点 - xh xmin"）
-- **专注记录**：近30天记录列表
-- **时间轴**：按时间顺序排列，月视图日历选择器，过往记录全屏查看
+- **专注热力图**：30/90 天活动密度（无数字，纯颜色）
+- **任务集进度**：各任务集完成率
+- **专注分布**：任务集/子任务专注时长占比环形图
+- **专注摘要**：总时长 / 番茄数 / 均时长
+- **7天专注**：近7天柱状图（点击查看详情）
+- **专注时段**：24小时分布（0点~21点横坐标）
+- **专注时间轴**：今日时间轴 + 过往月视图日历选择器（全屏 overlay）
 
 ### 👤 我的
-- 用户资料（等级系统：累计专注时长升级）
+- 用户资料（等级系统：10级勋章，最高500h）
+- **10 个 SVG 勋章**（灰铁→铜→银→金→蓝→紫钻→粉宝→紫星→红冠→彩虹）
+- **6 个活跃徽章**（星空天体系列：⭐晨星→🌙新月→☀️骄阳→🌠流星→☄️流火→🌌银河）
 - 深色模式
-- **22 种主题配色**（8 标准 3 字 + 14 特殊 4 字）
-  - 标准：樱花粉 / 薄荷绿 / 天空蓝 / 薰衣草 / 日落橙 / 柠檬黄 / 玫瑰红 / 青碧色
-  - 特殊：暗夜霓虹 / 莫兰迪色 / 赛博朋克 / 奶油森林 / 极简墨色 / 云朵灰调 / 抹茶拿铁 / 樱花日记 / 深海蓝调 / 暖阳书房 / 樱渍清酒 / 柠叶碎冰 / 桂子白茅 / 雾荔沉浆
-- 数据管理：导出 / 导入 / 刷新 / 清除缓存
+- **22 种主题配色**（8 标准 + 14 特殊）
+- 数据管理：导出（4层策略适配移动端）/ 导入 / 刷新 / 清除缓存
 - 回收站
-- 检查版本更新（GitHub Releases）
-- 隐私政策
+- 提醒通知（系统通知权限，自适应客户端文案）
+- 存储权限
+- 检查版本更新
 
 ### 🎨 设计细节
 - CSS 变量主题系统（`--accent-50~600`）+ `color-mix` + `backdrop-filter` 毛玻璃
-- Framer Motion 微交互动画（hover / tap / 弹窗 / 庆祝彩带）
+- Framer Motion 微交互动画
 - 移动端优先响应式设计
 - 安全区适配（刘海 / 底部导航条）
 - PWA 离线缓存（Service Worker）
-
----
-
-## 📸 截图
-
-| 首页 | 任务 | 计时 |
-|:---:|:---:|:---:|
-| 🏠 | 📋 | ⏱️ |
-
-| 统计 | 我的 | 主题 |
-|:---:|:---:|:---:|
-| 📊 | 👤 | 🎨 |
-
-> 截图待补充，欢迎 PR 提交你的使用截图～
+- IndexedDB 双层数据备份（防会话重置丢失）
 
 ---
 
@@ -138,7 +125,7 @@ bun run lint
 ```bash
 # 自动下载 JDK + Android SDK 并编译
 bun run apk:build
-# 产出：dist/计你太美-v1.3.2-debug.apk
+# 产出：dist/计你太美-v1.3.3-debug.apk
 ```
 
 ### 手动构建
@@ -147,10 +134,16 @@ bun run apk:build
 # 1. 生成静态导出
 bun run build
 
-# 2. 同步到 Android 工程
+# 2. 删除 sourcemap（压缩体积）
+find out/ -name "*.map" -delete
+
+# 3. 同步到 Android 工程
 bun run cap:sync
 
-# 3. 编译 APK
+# 4. 删除 android assets 中的 sourcemap
+find android/app/src/main/assets/public/ -name "*.map" -delete
+
+# 5. 编译 APK
 cd android && ./gradlew assembleDebug
 
 # 产物：android/app/build/outputs/apk/debug/app-debug.apk
@@ -159,7 +152,7 @@ cd android && ./gradlew assembleDebug
 ### 安装到手机
 
 ```bash
-adb install dist/计你太美-v1.3.2-debug.apk
+adb install dist/计你太美-v1.3.3-debug.apk
 ```
 
 > 📖 完整构建指南见 [docs/APK-BUILD.md](docs/APK-BUILD.md)
@@ -179,9 +172,10 @@ adb install dist/计你太美-v1.3.2-debug.apk
 | **动画** | Framer Motion | 微交互 |
 | **拖拽** | dnd-kit | 任务排序 |
 | **状态** | Zustand + persist | 客户端状态 |
-| **数据** | localStorage | 离线数据层（无服务端依赖） |
+| **数据** | localStorage + IndexedDB | 离线数据层（双层备份） |
 | **移动端** | Capacitor 8 | Android 打包 |
 | **PWA** | Service Worker | 离线缓存 |
+| **通知** | Capacitor Local Notifications | 原生通知权限 |
 
 ### 架构说明
 
@@ -197,7 +191,8 @@ adb install dist/计你太美-v1.3.2-debug.apk
 │  数据层 (src/lib/local-db.ts)                   │
 │  ├── localFetch() — fetch 兼容的本地 API        │
 │  ├── 17 个端点（任务集/任务/子任务/专注/统计）  │
-│  └── localStorage 持久化                        │
+│  ├── localStorage 持久化                        │
+│  └── IndexedDB 备份（防会话重置丢失）           │
 ├─────────────────────────────────────────────────┤
 │  分发                                            │
 │  ├── Web (静态导出 out/)                         │
@@ -208,13 +203,12 @@ adb install dist/计你太美-v1.3.2-debug.apk
 
 ### 离线数据层
 
-应用采用纯前端架构，所有数据存储在浏览器 `localStorage`，**无需服务端**：
+应用采用纯前端架构，所有数据存储在浏览器 `localStorage` + `IndexedDB`，**无需服务端**：
 
 - `src/lib/local-db.ts` —— 完整复刻 17 个 API 端点的本地数据层
+- `src/lib/persistent-storage.ts` —— IndexedDB 双层备份
 - `src/lib/store.ts` —— Zustand 状态管理，通过 `localFetch` 访问数据
 - 数据模型：`TaskSet` / `Task` / `SubTask` / `FocusSession`
-
-这意味着 Web / PWA / APK 三端共享同一套数据逻辑，完全离线可用。
 
 ---
 
@@ -234,9 +228,11 @@ JiNiTaiMei/
 │   │   │   ├── tasks-page.tsx
 │   │   │   ├── stats-page.tsx
 │   │   │   └── profile-page.tsx
+│   │   ├── level-badges.tsx    # 10个SVG勋章组件
 │   │   └── ui/                 # shadcn/ui 组件
 │   ├── lib/
 │   │   ├── local-db.ts         # 离线数据层（核心）
+│   │   ├── persistent-storage.ts # IndexedDB备份层
 │   │   └── store.ts            # Zustand 状态管理
 │   ├── hooks/                  # 自定义 Hooks
 │   └── types/                  # TypeScript 类型
@@ -312,7 +308,8 @@ model FocusSession {      // 专注记录
 
 | 版本 | 日期 | 主要更新 |
 |------|------|----------|
-| **v1.3.2** | 2026-07 | 离线 APK 打包、PWA 支持、移动端适配 |
+| **v1.3.3** | 2026-07 | 离线APK、毛玻璃计时圈、月视图日历热力图、截止日期通知、移动端导出 |
+| v1.3.2 | 2026-07 | 离线 APK 打包、PWA 支持、移动端适配 |
 | v1.3.0 | 2026-07 | 统计卡片可拖拽排序、环形图毛玻璃、月视图时间轴 |
 | v1.2.0 | 2026-06 | 专注计时全屏化、子任务关联、22 主题配色 |
 | v1.1.0 | 2026-05 | 任务集系统、子任务、回收站、拖拽排序 |
@@ -329,14 +326,6 @@ model FocusSession {      // 专注记录
 3. 提交更改：`git commit -m 'Add amazing feature'`
 4. 推送分支：`git push origin feature/amazing-feature`
 5. 提交 Pull Request
-
-### 贡献方向
-
-- 🐛 修复 Bug
-- ✨ 新功能（新主题、新统计卡片、新计时模式等）
-- 🎨 UI/UX 优化
-- 📝 文档改进
-- 🌍 国际化支持
 
 ---
 
@@ -365,6 +354,10 @@ model FocusSession {      // 专注记录
 
 ---
 
+<div align="center">
+
 **Made with 💗 by 计你太美**
 
 让每一件小事都闪闪发光 ✨
+
+</div>
