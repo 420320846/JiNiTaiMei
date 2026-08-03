@@ -5,7 +5,7 @@
 
 计你太美是一个基于 Next.js 16 的任务管理与专注计时应用，采用樱花粉主题的可爱风设计。把目标拆成任务集，专注计时，统计进度，让生活更有条理。支持 **Web / PWA / Android APK** 三端运行，完全离线可用。
 
-![version](https://img.shields.io/badge/version-v1.3.3-FFB7C5)
+![version](https://img.shields.io/badge/version-v1.3.6-FFB7C5)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 ![next](https://img.shields.io/badge/Next.js-16-black)
 ![react](https://img.shields.io/badge/React-19-61dafb)
